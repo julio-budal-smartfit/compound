@@ -8,13 +8,18 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
+interface ChartData {
+  month: number;
+  value: number;
+}
+
 const CompoundCalculator = () => {
   const [principal, setPrincipal] = useState<string>('1000');
   const [rate, setRate] = useState<string>('5');
   const [time, setTime] = useState<string>('5');
   const [monthlyContribution, setMonthlyContribution] = useState<string>('100');
   const [result, setResult] = useState<number>(0);
-  const [chartData, setChartData] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<ChartData[]>([]);
   const { toast } = useToast();
 
   const calculateCompoundInterest = () => {
@@ -35,12 +40,12 @@ const CompoundCalculator = () => {
     const monthlyRate = r / 12;
     const totalMonths = t * 12;
     
-    let data = [];
+    const data: ChartData[] = [];
     let balance = p;
     
     for (let month = 0; month <= totalMonths; month++) {
       data.push({
-        month: month,
+        month,
         value: balance,
       });
       balance = balance * (1 + monthlyRate) + m;
@@ -138,7 +143,7 @@ const CompoundCalculator = () => {
                         }
                       />
                       <Tooltip 
-                        formatter={(value) => 
+                        formatter={(value: number) => 
                           value.toLocaleString('pt-BR', {
                             style: 'currency',
                             currency: 'BRL'
